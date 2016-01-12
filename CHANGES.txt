@@ -1,5 +1,5 @@
-CHANGES:
-ENTRY BY/ON: Name/Date
+CHANGES: Added massedit option
+ENTRY BY/ON: Yuan Yuchuan / 12/01/2016
 
 CHANGES:
 ENTRY BY/ON: Name/Date

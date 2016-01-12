@@ -117,7 +117,8 @@ namespace CVWO\HelloWorld {
 			$values = $form_state['values'];
 		} else {
 			$values = array(
-    			'csv' => ''
+    			'csv' => '',
+    			'comment' => ''
 			);
 		}
 
@@ -128,6 +129,13 @@ namespace CVWO\HelloWorld {
 			'#required' => TRUE,
 		);
 
+		$form['comment'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Comment for all entries'),
+			'#default_value' => $values['comment'],
+			'#rows' => 3,
+			'#required' => FALSE,
+		);
 		
 			$form['add'] = array(
 				'#type' => 'submit',
@@ -212,12 +220,13 @@ namespace CVWO\HelloWorld {
             } else{
                 $form_state['values']['csv'] = array();
     		}
+    		$form_state["user_arrays"] = $users;
 		}
         
 	}
 
     function helloworld_massedit_form_submit($form, &$form_state){
-        store_multiple_users($users, $form_state);
+        store_multiple_users($form_state["user_arrays"], $form_state);
     }
     
     function store_multiple_users($users, &$form_state){

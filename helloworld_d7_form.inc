@@ -92,6 +92,93 @@ namespace CVWO\HelloWorld {
 		return $form;
 	}
 
+
+    /**
+     * Displays the form for mass-adding a user record
+     */
+	function helloworld_massedit_form($form, &$form_state) {
+		$form = array();
+
+/*
+		if ($helloworld_id != null && $page_mode != 'add') {
+			// we store the helloworld_id here for future reference (when updating/deleting later)
+			$form['helloworld_id'] = array(
+				'#type' => 'hidden',
+				'#value' => $helloworld_id,
+			);
+			if (!load_user($form_state, $helloworld_id)) {
+				drupal_set_message('Failed to load user details');
+				drupal_goto(MODULE_NAME);
+			}
+		}
+*/
+		
+		if (isset($form_state['values'])) {
+			$values = $form_state['values'];
+		} else {
+			$values = array(
+    			'users' => ''
+			);
+		}
+
+		$form['csv'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Users'),
+			'#default_value' => $values['users'],
+			'#required' => TRUE,
+		);
+		
+/*
+		$form['email'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Email'),
+			'#default_value' => $values['email'],
+			'#disabled' => $disabled,
+			'#size' => 64,
+			'#required' => TRUE,
+		);
+		
+		$form['comment'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Comments'),
+			'#disabled' => $disabled,
+			'#default_value' => $values['comment'],
+			'#rows' => 3,
+			'#required' => FALSE,
+		);
+*/
+		
+/*
+		// We create the buttons based on the page mode
+		if ($page_mode == 'add') {
+*/
+			$form['add'] = array(
+				'#type' => 'submit',
+				'#value' => t('Add'),
+			);
+/*
+		} else if ($page_mode == 'edit') {
+			$form['edit'] = array(
+				'#type' => 'submit',
+				'#value' => t('Edit'),
+			);
+			
+			drupal_add_js(drupal_get_path("module", MODULE_NAME)."/helloworld_d7.js");
+
+			// check whether user has access to delete first before creating such a button
+			if (user_access(DELETE_USER_PERM)) {
+				$form['delete'] = array(
+					'#type' => 'submit',
+					'#value' => t('Delete'),
+					'#attributes' => array('onclick' => 'return confirm_helloworld_form_delete()'),
+				);
+			}
+		}
+*/
+	  
+		return $form;
+	}
+
 	/**
 	 * Implements form_validate
 	 */
@@ -146,6 +233,32 @@ namespace CVWO\HelloWorld {
 		}
 	}
 
+	function helloworld_massedit_form_validate($form, &$form_state){
+        
+	}
+
+
+    function helloworld_massedit_form_submit($form, &$form_state){
+		if(!isset($form['csv']) || $form['csv']['#value'] == ''){
+    		drupal_set_message("No Records Created");
+		} else{
+//    		$records = explode("\n", $form['csv']['#value']);
+            $records = str_getcsv($form['csv']['#value'], "\n");
+            $rejected = [];
+            $users = [];
+            foreach($records as &$row){
+                $cols = str_getcsv($row);
+                if(count($cols) == 2 && valid_email_address($cols[1])){
+                    $users[] = $cols;
+                } else{
+                    $rejected[] = $row;
+                }
+            }
+    		drupal_set_message(print_r($rejected, true));
+    		drupal_set_message(print_r($users, true));
+		}
+    }
+    
 	/**
 	 * Function implements the Helloworld admin settings form
 	 */ 

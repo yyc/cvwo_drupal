@@ -112,6 +112,16 @@ namespace {
 			'page callback' => 'drupal_get_form',
 			'page arguments' => array('\CVWO\HelloWorld\helloworld_form', 1),
 			'file' => 'helloworld_d7_form.inc',
+			'access callback' => 'user_access', 
+			'access arguments' => array(HelloWorld\ADD_USER_PERM),
+			'type' => MENU_LOCAL_TASK,
+		);
+
+		$items[HelloWorld\MODULE_NAME . '/mass_edit'] = array(
+			'title' => 'Mass Add Records',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('\CVWO\HelloWorld\helloworld_massedit_form'),
+			'file' => 'helloworld_d7_form.inc',
 			'access callback' => 'user_access',
 			'access arguments' => array(HelloWorld\ADD_USER_PERM),
 			'type' => MENU_LOCAL_TASK,
